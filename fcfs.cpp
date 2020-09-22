@@ -38,14 +38,6 @@ bool compare (process a, process b)
     }
 }
 
-void print_data()
-{
-    for (auto it=process_data.begin();it!=process_data.end();it++)
-    {
-        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
-    }
-}
-
 void print_info(int i)
 {
     cout << "Process id= " << process_data[i].id << endl;
@@ -65,7 +57,6 @@ int main()
 
     spawn_process(n);
     sort(process_data.begin(),process_data.end(),compare);
-    print_data();
     
     int t=0;
     int avg_wt=0;
