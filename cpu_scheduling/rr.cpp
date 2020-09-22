@@ -71,7 +71,6 @@ int main()
 
     spawn_process(n);
     sort(process_data.begin(),process_data.end(),compare);
-    debug_data();
     vector<int> ready_queue;
 
     int t=0;
