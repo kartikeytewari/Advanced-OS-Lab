@@ -36,15 +36,11 @@ int main()
 
         if (!flag)
         {
+            page_fault++;
+            buffer.push_back(page[i]);
             if (max_buffer_size==(int)buffer.size())
             {
-                page_fault++;
                 buffer.erase(prev(buffer.end()));
-                buffer.push_back(page[i]);
-            }
-            else
-            {
-                buffer.push_back(page[i]);
             }
         }
     }
