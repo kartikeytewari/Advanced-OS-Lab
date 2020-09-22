@@ -28,6 +28,14 @@ void spawn_process(int n)
     }
 }
 
+void debug_data()
+{
+    for (auto it=process_data.begin();it!=process_data.end();it++)
+    {
+        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
+    }
+}
+
 bool compare (process a, process b)
 {
     if (a.arrival_time!=b.arrival_time)
@@ -51,14 +59,6 @@ void print_info(int i)
     cout << "Turn Around Time= " << process_data[i].turn_around_time << endl << endl;
 }
 
-void print_data()
-{
-    for (auto it=process_data.begin();it!=process_data.end();it++)
-    {
-        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
-    }
-}
-
 int main()
 {
     int n;
@@ -67,7 +67,6 @@ int main()
 
     spawn_process(n);
     sort(process_data.begin(),process_data.end(),compare);
-    print_data();
 
     int t=0;
     int avg_wt=0;
@@ -85,6 +84,7 @@ int main()
         process_data[local_id].validity=false;
         avg_wt+=process_data[local_id].waiting_time;
         avg_tat+=process_data[local_id].turn_around_time;
+        print_info(local_id);
 
         vector<pair<int,int>> buffer;
         for (int i=0;i<=n-1;i++)
@@ -112,7 +112,6 @@ int main()
             }
         }
 
-        print_info(local_id);
         comp_process++;
     }
 

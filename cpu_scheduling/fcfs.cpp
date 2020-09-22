@@ -26,6 +26,14 @@ void spawn_process(int n)
     }
 }
 
+void debug_data()
+{
+    for (auto it=process_data.begin();it!=process_data.end();it++)
+    {
+        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
+    }
+}
+
 bool compare (process a, process b)
 {
     if (a.arrival_time!=b.arrival_time)
