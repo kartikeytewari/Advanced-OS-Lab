@@ -7,7 +7,7 @@ Practicals:
         CPU Scheduling Algorithms:
         <ul>
             <li> FCFS </li>
-            <li> SJF </li>
+            <li> SJF (pre-emptive and non pre-emptive) </li>
             <li> Round Robin </li>
             <li> Prioity Based Algorithms </li>
         </ul>
