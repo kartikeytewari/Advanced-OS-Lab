@@ -38,13 +38,21 @@ bool compare (process a, process b)
     }
 }
 
+void print_data()
+{
+    for (auto it=process_data.begin();it!=process_data.end();it++)
+    {
+        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
+    }
+}
+
 void print_info(int i)
 {
     cout << "Process id= " << process_data[i].id << endl;
     cout << "Arrival Time= " << process_data[i].arrival_time << endl;
     cout << "Start Time= " << process_data[i].start_time << endl;
     cout << "Process CPU Burst Time= " << process_data[i].duration << endl;
-    cout << "End Data= " << process_data[i].end_time << endl;
+    cout << "End Time= " << process_data[i].end_time << endl;
     cout << "Waiting time= " << process_data[i].waiting_time << endl;
     cout << "Turn Around Time= " << process_data[i].turn_around_time << endl << endl;
 }
@@ -57,6 +65,7 @@ int main()
 
     spawn_process(n);
     sort(process_data.begin(),process_data.end(),compare);
+    print_data();
     
     int t=0;
     int avg_wt=0;
@@ -65,10 +74,10 @@ int main()
     {
         t=max(t,process_data[i].arrival_time);
         process_data[i].start_time=t;
-        process_data[i].waiting_time=t-process_data[i].arrival_time;
         t+=process_data[i].duration;
         process_data[i].end_time=t;
-        process_data[i].turn_around_time=process_data[i].end_time-process_data[i].start_time;
+        process_data[i].waiting_time=process_data[i].start_time-process_data[i].arrival_time;
+        process_data[i].turn_around_time=process_data[i].end_time-process_data[i].arrival_time;
 
         avg_wt+=process_data[i].waiting_time;
         avg_tat+=process_data[i].turn_around_time;
