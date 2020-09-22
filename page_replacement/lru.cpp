@@ -23,5 +23,42 @@ int main()
     spawn_pages(n);
     vector<int> buffer;
     int page_fault=0;
-    
+    for (int i=0;i<=n-1;i++)
+    {
+        bool flag=false;
+        for (auto it=buffer.begin();it!=buffer.end();it++)
+        {
+            if (*it==page[i])
+            {
+                flag=true;
+            }
+        }
+
+        if (flag)
+        {
+            for (auto it=buffer.begin();it!=buffer.end();it++)
+            {
+                if (*it==page[i])
+                {
+                    buffer.erase(it);
+                    break;
+                }
+            }
+            buffer.push_back(page[i]);
+        }
+        else
+        {
+            page_fault++;
+            if (max_buffer_size==(int)buffer.size())
+            {
+                buffer.erase(prev(buffer.end()));
+            }
+            buffer.push_back(page[i]);
+        }
+    }
+
+    cout << "Number of page faults= " << page_fault << endl;
+    cout << "Perentage of page faults= " << (page_fault*100)/n << endl;
+
+    return 0;
 }
