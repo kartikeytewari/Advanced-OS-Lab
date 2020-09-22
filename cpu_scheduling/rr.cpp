@@ -7,8 +7,8 @@ struct process
     int arrival_time;
     int start_time;
     int duration;
-    int rem_time;
     int end_time;
+    int rem_time;
     int waiting_time;
     int turn_around_time;
 };
@@ -26,6 +26,14 @@ void spawn_process(int n)
         temp.rem_time=temp.duration;
         temp.start_time=-1;
         process_data.push_back(temp);
+    }
+}
+
+void debug_data()
+{
+    for (auto it=process_data.begin();it!=process_data.end();it++)
+    {
+        cout << it->id << " " << it->arrival_time << " " << it->duration << endl;
     }
 }
 
@@ -47,51 +55,47 @@ void print_info(int i)
     cout << "Arrival Time= " << process_data[i].arrival_time << endl;
     cout << "Start Time= " << process_data[i].start_time << endl;
     cout << "Process CPU Burst Time= " << process_data[i].duration << endl;
-    cout << "End Data= " << process_data[i].end_time << endl;
+    cout << "End Time= " << process_data[i].end_time << endl;
     cout << "Waiting time= " << process_data[i].waiting_time << endl;
     cout << "Turn Around Time= " << process_data[i].turn_around_time << endl << endl;
 }
 
+
 int main()
 {
-    int n, quantum;
+    int n,quantum;
     cout << "Enter number of processes to spawn= ";
     cin >> n;
-    cout << "Quantum Value= ";
+    cout << "Enter quantum time= ";
     cin >> quantum;
 
     spawn_process(n);
     sort(process_data.begin(),process_data.end(),compare);
-    
+    debug_data();
+    vector<int> ready_queue;
+
     int t=0;
     int avg_wt=0;
     int avg_tat=0;
     int comp_process=0;
-    vector<int> buffer;
+
     while (comp_process<=n-1)
     {
-        for (int i=0;i<=n-1;i++)
-        {
-            if ((process_data[i].rem_time!=0)&&(process_data[i].arrival_time<=t))
-            {
-                buffer.push_back(i);
-            }
-        }
-
-        if (buffer.size()==0)
+        if (ready_queue.size()==0)
         {
             for (int i=0;i<=n-1;i++)
             {
                 if (process_data[i].rem_time!=0)
                 {
                     t=process_data[i].arrival_time;
-                    buffer.push_back(i);
+                    ready_queue.push_back(i);
                     break;
                 }
             }
         }
 
-        int local_id=*buffer.begin();
+        int local_id=*ready_queue.begin();
+        // serve the process
         if (process_data[local_id].start_time==-1)
         {
             process_data[local_id].start_time=t;
@@ -101,7 +105,7 @@ int main()
 
         if (process_data[local_id].rem_time<=quantum)
         {
-            // this process will end
+            // process will end
             t+=process_data[local_id].rem_time;
             process_data[local_id].rem_time=0;
             process_data[local_id].end_time=t;
@@ -111,9 +115,36 @@ int main()
         }
         else
         {
-            // this process will continue in the cycle
+            // process will not end
             t+=quantum;
-            process_data[local_id].rem_time-=t;
+            process_data[local_id].rem_time-=quantum;
+        }
+
+        // refresh the ready_queue
+        for (int i=0;i<=n-1;i++)
+        {
+            if ((process_data[i].rem_time!=0)&&(process_data[i].arrival_time<=t))
+            {
+                bool flag=false;
+                for (auto it=ready_queue.begin();it!=ready_queue.end();it++)
+                {
+                    if (*it==i)
+                    {
+                        flag=true;
+                    }
+                }
+
+                if (!flag)
+                {
+                    ready_queue.push_back(i);
+                }
+            }
+        }
+
+        ready_queue.erase(ready_queue.begin());
+        if (process_data[local_id].rem_time!=0)
+        {
+            ready_queue.push_back(local_id);
         }
     }
 
@@ -122,12 +153,11 @@ int main()
         print_info(i);
     }
 
-
     avg_tat/=n;
     avg_wt/=n;
 
-    cout << "Average waiting time= " << avg_wt << endl;
-    cout << "Average turn around time= " << avg_tat << endl;
+    cout << "Average Waiting Time= " << avg_wt << endl;
+    cout << "Average Turn Around Time= " << avg_tat << endl;
 
     return 0;
 }
